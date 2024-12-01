@@ -6,10 +6,10 @@ export default class Day0 extends Day {
   }
 
   partOne (input: string): string {
-    return input
+    return "";
   }
 
   partTwo (input: string): string {
-    return input
+    return "";
   }
 }

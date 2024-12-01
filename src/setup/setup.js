@@ -65,8 +65,8 @@ export class Setup {
     async updateIndexImports() {
         const indexPath = path.join(this.rootDir, 'src', 'index.ts');
         const contents = (await promises.readFile(indexPath, { encoding: 'utf8' }))
-            .replace('// INSERT IMPORTS HERE', `import { Day${this.twoCharDay} } from './days/day${this.twoCharDay}/day';\n// INSERT IMPORTS HERE`)
-            .replace('// INSERT DAYS HERE', `day${this.twoCharDay},\n\t// INSERT DAYS HERE`);
+            .replace('// INSERT IMPORTS HERE', `import Day${this.twoCharDay} from './days/${this.twoCharDay}/day';\n// INSERT IMPORTS HERE`)
+            .replace('// INSERT DAYS HERE', `Day${this.twoCharDay},\n\t// INSERT DAYS HERE`);
         console.log(' - Updating index');
         await promises.writeFile(indexPath, contents);
     }
