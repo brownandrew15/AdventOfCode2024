@@ -27,28 +27,61 @@ export default class Day02 extends Day {
 
   }
 
+  findDifferences(sequence: number[]): number[] {
+    let differences = [];
+    for (let i=1; i < sequence.length; i++) {
+      differences.push(sequence[i] - sequence[i-1]);
+    }
+    return differences;
+  }
+
+  withoutElementAtIndex(array: number[], index: number): number[] {
+    return array.filter((value, arrayIndex) => {
+      return index !== arrayIndex;
+    });
+  }
+
+  couldBeMadeSafe(sequence: number[]): boolean {
+    for(let i=0; i < sequence.length; i++) {
+      const levelRemovedSequence = this.withoutElementAtIndex(sequence, i);
+      const differences = this.findDifferences(levelRemovedSequence);
+      const safe: boolean = this.isSafe(differences);
+      if (safe) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   partOne (input: string): string {
     let lines: string[] = input.split("\n");
     const sequences: number[][] = lines.map((line) => {
       return line.split(" ").map(value => parseInt(value));
     });
 
-    const differences: number[][] = sequences.map((sequence) => {
-      let difference = [];
-      for (let i=1; i < sequence.length; i++) {
-        difference.push(sequence[i] - sequence[i-1]);
-      }
-      return difference;
-    });
-    
-    const safe: number[][] = differences.filter(differencesSequence => {
-      return this.isSafe(differencesSequence);
+    const safe = sequences.filter(sequence => {
+      const differences = this.findDifferences(sequence);
+      return this.isSafe(differences);
     });
 
     return safe.length.toString();
   }
 
   partTwo (input: string): string {
-    return "";
+    let lines: string[] = input.split("\n");
+    const sequences: number[][] = lines.map((line) => {
+      return line.split(" ").map(value => parseInt(value));
+    });
+
+    const notSafe = sequences.filter(sequence => {
+      const differences = this.findDifferences(sequence);
+      return !this.isSafe(differences);
+    });
+
+    const safeCount = sequences.length - notSafe.length;
+
+    const couldBeSafe = notSafe.filter(sequence => this.couldBeMadeSafe(sequence));
+
+    return (safeCount + couldBeSafe.length).toString();
   }
 }

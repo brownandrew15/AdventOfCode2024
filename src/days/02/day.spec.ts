@@ -19,6 +19,6 @@ describe('On Day 02', () => {
     expect(day.partOne(input)).toBe('2')
   })
   it('part2', () => {
-    expect(day.partTwo('')).toBe('')
+    expect(day.partTwo(input)).toBe('4')
   })
 })
