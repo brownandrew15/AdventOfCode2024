@@ -28,28 +28,42 @@ export default class Day02 extends Day {
   }
 
   findDifferences(sequence: number[]): number[] {
-    let differences = [];
+    let differences: number[] = [];
     for (let i=1; i < sequence.length; i++) {
       differences.push(sequence[i] - sequence[i-1]);
     }
     return differences;
   }
 
-  withoutElementAtIndex(array: number[], index: number): number[] {
-    return array.filter((value, arrayIndex) => {
-      return index !== arrayIndex;
-    });
+  findDerivates(differences: number[]): number[] {
+    let derivatives: number[] = [];
+    for (let i=1; i < differences.length; i++) {
+      derivatives.push(differences[i] + differences[i-1]);
+    }
+    return derivatives;
   }
 
-  couldBeMadeSafe(sequence: number[]): boolean {
-    for(let i=0; i < sequence.length; i++) {
-      const levelRemovedSequence = this.withoutElementAtIndex(sequence, i);
-      const differences = this.findDifferences(levelRemovedSequence);
-      const safe: boolean = this.isSafe(differences);
-      if (safe) {
-        return true;
-      }
+
+  couldBeMadeSafe(differences: number[]): boolean {
+    let derivatives: number[] = this.findDerivates(differences);
+
+    // check if the first index was the removed index
+    let nowSafe = this.isSafe(differences.slice(1, differences.length));
+    if (nowSafe) return true;
+
+    // check the intermediate index removals
+    for (let i=1; i < differences.length; i++) {
+      const before = differences.slice(0, i-1);
+      const after = differences.slice(i + 1, differences.length);
+      const adjustedDifferences = before.concat([derivatives[i-1]], after);
+      nowSafe = this.isSafe(adjustedDifferences);
+      if (nowSafe) return true;
     }
+
+    // check if the last index was the removed index
+    nowSafe = this.isSafe(differences.slice(0, differences.length-1));
+    if (nowSafe) return true;
+
     return false;
   }
 
@@ -73,15 +87,11 @@ export default class Day02 extends Day {
       return line.split(" ").map(value => parseInt(value));
     });
 
-    const notSafe = sequences.filter(sequence => {
+    const safe = sequences.filter(sequence => {
       const differences = this.findDifferences(sequence);
-      return !this.isSafe(differences);
+      return this.isSafe(differences) || this.couldBeMadeSafe(differences);
     });
 
-    const safeCount = sequences.length - notSafe.length;
-
-    const couldBeSafe = notSafe.filter(sequence => this.couldBeMadeSafe(sequence));
-
-    return (safeCount + couldBeSafe.length).toString();
+    return safe.length.toString();
   }
 }
