@@ -1,9 +1,11 @@
 import { Day } from './days/day';
 import Day01 from './days/01/day';
+import Day02 from './days/02/day';
 // INSERT IMPORTS HERE
 
 const days: { new(): Day }[] = [
 	Day01,
+	Day02,
 	// INSERT DAYS HERE
 ];
 
