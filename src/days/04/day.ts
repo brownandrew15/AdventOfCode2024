@@ -41,7 +41,39 @@ export default class Day04 extends Day {
     return xmasCount.toString();
   }
 
+
+  isXMAS(grid: string[][], row: number, col: number): boolean {
+    if ((row >= grid.length-1) || (row < 1)) return false;
+    if ((col >= grid[row].length-1) || (col < 1)) return false;
+
+    return (
+      (
+        (grid[row-1][col-1] == "M") && (grid[row+1][col+1] == "S") ||
+        (grid[row-1][col-1] == "S") && (grid[row+1][col+1] == "M") 
+      )
+      &&
+      (
+        (grid[row+1][col-1] == "M") && (grid[row-1][col+1] == "S") ||
+        (grid[row+1][col-1] == "S") && (grid[row-1][col+1] == "M") 
+      )
+    );
+  }
+
+
   partTwo (input: string): string {
-    return "";
+    const grid = input.split('\n').map(row => row.split(''));
+
+    let count = 0;
+
+    for(let row = 0; row < grid.length; row++) {
+      for (let col = 0; col < grid[row].length; col++) {
+        if (grid[row][col] == "A") {
+          const isAnXMAS = this.isXMAS(grid, row, col);
+          count += (isAnXMAS ? 1 : 0);
+        }
+      }
+    }
+
+    return count.toString();
   }
 }

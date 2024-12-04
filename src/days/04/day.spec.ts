@@ -23,6 +23,6 @@ MXMXAXMASX`;
     expect(day.partOne(input)).toBe('18')
   })
   it('part2', () => {
-    expect(day.partTwo('')).toBe('')
+    expect(day.partTwo(input)).toBe('9')
   })
 })
