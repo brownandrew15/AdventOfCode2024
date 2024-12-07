@@ -5,20 +5,13 @@ export default class Day05 extends Day {
     super("05");
   }
 
-  createRules(rulesString: string) {
-    let rules = new Map<number, number[]>();
-    const rulePairs = rulesString.split("\n").map(pair => pair.split("|").map(value => parseInt(value)));
+  getUpdates(updatesString: string): number[][] {
+    return updatesString.split("\n").map(update => update.split(",").map(value => parseInt(value)));
+  }
 
 
-    rulePairs.forEach(pair => {
-      if (!(rules.has(pair[0]))) {
-        rules.set(pair[0], []);
-      }
-      rules.get(pair[0])?.push(pair[1]);
-    });
-
-    return rules;
-
+  getRules(rulesString: string): number[][] {
+    return rulesString.split("\n").map(pair => pair.split("|").map(value => parseInt(value)));
   }
 
   isUpdateValid(update: number[], printRules: Map<number, number[]>) {
@@ -36,14 +29,36 @@ export default class Day05 extends Day {
     return rtnValue;
   }
 
+  createRulesMapping(rulePairs: number[][]) {
+    let rules = new Map<number, number[]>();
+    rulePairs.forEach(pair => {
+      if (!(rules.has(pair[0]))) {
+        rules.set(pair[0], []);
+      }
+      rules.get(pair[0])?.push(pair[1]);
+    });
+    return rules;
+
+  }
+
+  filterRules(update: number[], rules: number[][]): number[][] {
+    return rules.filter(rule => {
+      return ((update.includes(rule[0])) && (update.includes(rule[1])))
+    });
+  }
+
   partOne (input: string): string {
     const inputSections = input.split("\n\n");
-    const printRules = this.createRules(inputSections[0]);
+    const rules = this.getRules(inputSections[0]);
+    const updates = this.getUpdates(inputSections[1]);
 
-    const updates = inputSections[1].split("\n").map(update => update.split(",").map(value => parseInt(value)));
     const validUpdates = updates.filter(update => {
-      const status = this.isUpdateValid(update, printRules);
-      return status;
+
+      const ruleMapping = this.createRulesMapping(
+        this.filterRules(update, rules)
+      );
+
+      return this.isUpdateValid(update, ruleMapping);
     });
 
     const centerValues = validUpdates.map(update => {
