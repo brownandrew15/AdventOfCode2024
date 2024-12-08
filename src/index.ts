@@ -4,6 +4,7 @@ import Day02 from './days/02/day';
 import Day03 from './days/03/day';
 import Day04 from './days/04/day';
 import Day05 from './days/05/day';
+import Day06 from './days/06/day';
 // INSERT IMPORTS HERE
 
 const days: { new(): Day }[] = [
@@ -12,6 +13,7 @@ const days: { new(): Day }[] = [
 	Day03,
 	Day04,
 	Day05,
+	Day06,
 	// INSERT DAYS HERE
 ];
 
